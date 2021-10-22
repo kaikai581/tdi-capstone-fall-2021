@@ -10,6 +10,8 @@ https://share.streamlit.io/jkanner/streamlit-dataview/master/app.py/+/
 from datetime import date, datetime
 from dotenv import load_dotenv
 from time import strptime
+
+import numpy as np
 import os
 import pandas as pd
 import plotly.express as px
@@ -50,15 +52,19 @@ if __name__ == '__main__':
     # show the retrieved data in a table
     # st.table(df_selected)
     df = get_data()
+    df['ae_pred_xgbr_untuned'] = df.pred_xgbr_untuned - df.found_helpful_percentage
 
     # make plot!
-    fig = px.scatter(df, x='found_helpful_percentage', y='pred_rfr_untuned', labels={'4. close': 'closing price'})
-    fig.add_shape(type='line',
-        x0=0, y0=0, x1=1, y1=1,
-        line=dict(
-                color='MediumPurple',
-                width=4,
-                dash='dot',
-            )
-    )   
+    # fig = px.scatter(df, x='found_helpful_percentage', y='pred_rfr_untuned', labels={'4. close': 'closing price'})
+    # fig.add_shape(type='line',
+    #     x0=0, y0=0, x1=1, y1=1,
+    #     line=dict(
+    #             color='MediumPurple',
+    #             width=4,
+    #             dash='dot',
+    #         )
+    # )
+    fig = px.histogram(df, x='ae_pred_xgbr_untuned', labels={
+                     'ae_pred_xgbr_untuned': 'prediction - truth'},
+                     title='Mean Absolute Error = {:.2f}'.format(np.abs(df.ae_pred_xgbr_untuned).mean()))
     st.plotly_chart(fig)
