@@ -17,25 +17,10 @@ import requests
 import streamlit as st
 
 @st.cache
-def get_data(selected_stock):
+def get_data():
     load_dotenv()
-    API_URL = 'https://www.alphavantage.co/query'
-    symbol = selected_stock
-
-    data = {
-    'function': 'TIME_SERIES_DAILY',
-    'symbol': symbol,
-    'outputsize': 'full',
-    'datatype': 'json',
-    'apikey': os.getenv('APIKEY')}
-
-    response = requests.get(API_URL, data)
-    response_json = response.json() # maybe redundant
-
-    df = pd.DataFrame.from_dict(response_json['Time Series (Daily)'], orient= 'index').sort_index(axis=1)
-    df = df.apply(pd.to_numeric)
-    df['date'] = pd.to_datetime(df.index)
-    # df['date'] = pd.to_datetime(df['date'].dt.date)
+    df = pd.read_csv('data/test_pred.csv')
+    
     return df
 
 if __name__ == '__main__':
@@ -56,30 +41,24 @@ if __name__ == '__main__':
     # render the side control bar
     #
     st.sidebar.markdown('# Select plot parameters:')
-    df_sym = pd.read_csv('data/nasdaq_screener_1624404893542.csv')
-    stock_list = list(df_sym.Symbol)
-    selected_stock = st.sidebar.selectbox('Ticker (e.g. AAPL):',
-                                            stock_list,
-                                            index=stock_list.index('AMZN'))
-    
-    # select year
-    selected_year = st.sidebar.selectbox('Year:',
-                                            list(reversed(range(2010, date.today().year+1))))
-    
-    # select month
-    month_list = [datetime(1900, mint, 1).strftime('%B') for mint in range(1, 13)]
-    selected_month = st.sidebar.selectbox('Month:',
-                                            month_list,
-                                            index=month_list.index(date.today().strftime('%B')))
-    
-    # retrieve data with Alpha Vantage API
-    df = get_data(selected_stock)
-    df_selected = df[(df.date.dt.month == strptime(selected_month,'%B').tm_mon)
-                     & (df.date.dt.year == selected_year)]
+    # df_sym = pd.read_csv('data/nasdaq_screener_1624404893542.csv')
+    # stock_list = list(df_sym.Symbol)
+    # selected_stock = st.sidebar.selectbox('Ticker (e.g. AAPL):',
+    #                                         stock_list,
+    #                                         index=stock_list.index('AMZN'))
 
     # show the retrieved data in a table
     # st.table(df_selected)
+    df = get_data()
 
     # make plot!
-    fig = px.line(df_selected, x='date', y='4. close', labels={'4. close': f'{selected_stock} closing price'})
+    fig = px.scatter(df, x='found_helpful_percentage', y='pred_rfr_untuned', labels={'4. close': 'closing price'})
+    fig.add_shape(type='line',
+        x0=0, y0=0, x1=1, y1=1,
+        line=dict(
+                color='MediumPurple',
+                width=4,
+                dash='dot',
+            )
+    )   
     st.plotly_chart(fig)
