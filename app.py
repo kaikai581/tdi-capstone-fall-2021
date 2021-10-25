@@ -15,15 +15,21 @@ import numpy as np
 import os
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import requests
 import streamlit as st
 
-@st.cache
-def get_data():
-    load_dotenv()
-    df = pd.read_csv('data/test_pred.csv')
+class data_n_util:
+    def __init__(self, data_fpn='data/test_pred.csv'):
+        self.data_fpn = data_fpn
+        self.df = self.load_data(data_fpn)
     
-    return df
+    @st.cache
+    def load_data(self, data_fpn):
+        load_dotenv()
+        df = pd.read_csv(data_fpn)
+        df['ae_pred_xgbr_untuned'] = df.pred_xgbr_untuned - df.found_helpful_percentage
+        return df
 
 if __name__ == '__main__':
     #
@@ -51,8 +57,7 @@ if __name__ == '__main__':
 
     # show the retrieved data in a table
     # st.table(df_selected)
-    df = get_data()
-    df['ae_pred_xgbr_untuned'] = df.pred_xgbr_untuned - df.found_helpful_percentage
+    my_data = data_n_util()
 
     # make plot!
     # fig = px.scatter(df, x='found_helpful_percentage', y='pred_rfr_untuned', labels={'4. close': 'closing price'})
@@ -64,7 +69,13 @@ if __name__ == '__main__':
     #             dash='dot',
     #         )
     # )
-    fig = px.histogram(df, x='ae_pred_xgbr_untuned', labels={
+    fig_diff = px.histogram(my_data.df, x='ae_pred_xgbr_untuned', labels={
                      'ae_pred_xgbr_untuned': 'prediction - truth'},
-                     title='Mean Absolute Error = {:.2f}'.format(np.abs(df.ae_pred_xgbr_untuned).mean()))
-    st.plotly_chart(fig)
+                     title='Mean Absolute Error = {:.2f}'.format(np.abs(my_data.df.ae_pred_xgbr_untuned).mean()))
+    fig_scat = go.FigureWidget()
+    fig_scat.add_scatter(
+        x=my_data.df.found_helpful_percentage,
+        y=my_data.df.pred_lstm2_untuned,
+        mode='markers'
+    )
+    st.plotly_chart(fig_diff)
