@@ -14,3 +14,12 @@ To run the app locally, issue the following command.
 ```
 $ streamlit run streamlit_app.py
 ```
+
+## Heroku Deployment
+### References
+1. [minimal-heroku-demo](https://github.com/holoviz-demos/minimal-heroku-demo)
+
+### Troubleshooting
+- Error message saying  
+ ```remote:  !     No default language could be detected for this app.```  
+ Have you pushed all changes to GitHub already?

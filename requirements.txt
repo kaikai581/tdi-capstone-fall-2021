@@ -1,5 +1,9 @@
 panel
 hvplot
+ipython
 nbconvert
+numpy
 pandas
+param
+plotly
 scikit-learn
