@@ -1,9 +1,12 @@
 panel
 hvplot
 ipython
+keras
 nbconvert
 numpy
 pandas
 param
 plotly
 scikit-learn
+tensorflow
+tqdm
