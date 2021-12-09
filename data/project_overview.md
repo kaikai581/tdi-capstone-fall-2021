@@ -7,10 +7,10 @@ Here are facts from surveys showing how written reviews can affect customer’s 
 - 94% of online customers read reviews before making any purchasing decisions
 - Displaying reviews can increase sales by 270% on average
 - Customers are more impressed by written reviews than star ratings
-  
+
 Business can benefit from showing customers “helpful reviews.”
 
-## Project Goal: predict review quality
+## Project goal: predict review quality
 <span style="color:red">The goal of this project is to predict the usefulness/helpfulness of written reviews before they are rated by users.</span>  
 E-commerse websites nowadays promote useful reviews that are determined by user votes.  
 This project is useful to  
@@ -30,3 +30,8 @@ This project is useful to
     - global vector (GloVe) word embeddings for text vectorization  
     - machine learning techniques for regression  
 
+## Project repositories
+For the NLP techniques and regression prediction:  
+[https://github.com/kaikai581/steam-reviews](https://github.com/kaikai581/steam-reviews)  
+For Heroku deployment:  
+[https://github.com/kaikai581/tdi-capstone-fall-2021](https://github.com/kaikai581/tdi-capstone-fall-2021)
